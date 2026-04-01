@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timezone, timedelta
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ChatPermissions
 from telegram.ext import (
     Application, CommandHandler, CallbackQueryHandler,
     MessageHandler, filters, ContextTypes
@@ -9,6 +9,8 @@ from telegram.ext import (
 BOT_TOKEN = "8593628816:AAGfsVV5saeuiBqNz4XDl1XzL8bygMuZBps"
 
 OWNER_ID = 6625019627
+GROUP_CONTROL_ID = -1002872325078  # অটো অন/অফ গ্রুপ
+group_night_msg_id = None  # রাতের মেসেজ ID সেভ
 allowed_users = set([OWNER_ID])
 target_groups = {}  # {group_id: group_title}
 
@@ -335,6 +337,105 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ============================================
+# গ্রুপ অটো অফ — রাত ১২টা
+# ============================================
+async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
+    global group_night_msg_id
+    try:
+        # Good Night মেসেজ পাঠাও
+        sent = await context.bot.send_message(
+            chat_id=GROUP_CONTROL_ID,
+            text=(
+                "🌙✨ 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 ✨🌙\n"
+                "╔════════════════╗\n"
+                "  /*শুভ রাত্রি 😴*/  \n"
+                "╚════════════════╝\n\n"
+                "🤲 ঘুমানোর আগে দোয়া:\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "🕌 اللهم بسمك أموت وأحيا\n\n"
+                "📖 বাংলা উচ্চারণ:\n"
+                "'আল্লাহুম্মা বিসমিকা আমুতু ওয়া-আহইয়া'\n\n"
+                "💫 অর্থ:\n"
+                "হে আল্লাহ! আমি তোমারই নামে মৃত্যুবরণ করি,\n"
+                "আবার তোমারই নামে জীবন ধারন করি।\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "⚠️ বিশেষ দ্রষ্টব্য:\n"
+                "এখন কোনো এডমিন লাইনে থাকবে না!!\n"
+                "তাই গ্রুপটি অফ 🔴\n"
+                "আবার ভোর ৫টায় খোলা হবে। 🌅"
+            )
+        )
+        group_night_msg_id = sent.message_id
+
+        # সব পারমিশন অফ করো
+        await context.bot.set_chat_permissions(
+            chat_id=GROUP_CONTROL_ID,
+            permissions=ChatPermissions(
+                can_send_messages=False,
+                can_send_media_messages=False,
+                can_send_polls=False,
+                can_send_other_messages=False,
+                can_add_web_page_previews=False,
+                can_change_info=False,
+                can_invite_users=False,
+                can_pin_messages=False,
+            )
+        )
+    except Exception as e:
+        logging.error(f"Night off error: {e}")
+
+
+# ============================================
+# গ্রুপ অটো অন — সকাল ৫টা
+# ============================================
+async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
+    global group_night_msg_id
+    try:
+        # রাতের মেসেজ ডিলিট করো
+        if group_night_msg_id:
+            try:
+                await context.bot.delete_message(
+                    chat_id=GROUP_CONTROL_ID,
+                    message_id=group_night_msg_id
+                )
+                group_night_msg_id = None
+            except Exception:
+                pass
+
+        # শুধু Text + Media অন করো
+        await context.bot.set_chat_permissions(
+            chat_id=GROUP_CONTROL_ID,
+            permissions=ChatPermissions(
+                can_send_messages=True,
+                can_send_media_messages=True,
+                can_send_polls=False,
+                can_send_other_messages=False,
+                can_add_web_page_previews=False,
+                can_change_info=False,
+                can_invite_users=False,
+                can_pin_messages=False,
+            )
+        )
+
+        # Good Morning মেসেজ পাঠাও
+        await context.bot.send_message(
+            chat_id=GROUP_CONTROL_ID,
+            text=(
+                "🌅✨ 𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 ✨🌅\n"
+                "╔═══════════════╗\n"
+                "  শুভ সকাল 🌸  \n"
+                "╚═══════════════╝\n\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "🎉 আমাদের গ্রুপটি খোলা হয়েছে!\n"
+                "এখন আপনারা বোনাস নিতে পারবেন। 🎁\n"
+                "━━━━━━━━━━━━━━━━"
+            )
+        )
+    except Exception as e:
+        logging.error(f"Morning on error: {e}")
+
+
+# ============================================
 # broadcast_job
 # ============================================
 async def broadcast_job(context: ContextTypes.DEFAULT_TYPE):
@@ -464,6 +565,12 @@ def main():
     app.add_handler(CommandHandler("remove", remove_user))
     app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.PHOTO & filters.CaptionRegex(r'^/setmsg'), setmsg))
+
+    # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
+    # রাত ১২:০০ BD = ১৮:০০ UTC
+    app.job_queue.run_daily(group_night_off, time=datetime.strptime("18:00", "%H:%M").replace(tzinfo=timezone.utc).timetz())
+    # সকাল ৫:০০ BD = ২৩:০০ UTC
+    app.job_queue.run_daily(group_morning_on, time=datetime.strptime("23:00", "%H:%M").replace(tzinfo=timezone.utc).timetz())
 
     print("Bot started...")
     app.run_polling()
