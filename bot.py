@@ -67,7 +67,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "│ 👥 /allow [id] — ইউজার অ্যাড\n"
         "│ 🚫 /remove [id] — ইউজার বাদ\n"
         "└───────────────────\n\n"
-        "⚡ Powered by AutoBroadcast"
+        "⚡ Powered by @mrincome9"
     )
 
 
