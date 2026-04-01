@@ -118,7 +118,7 @@ async def remove_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         allowed_users.discard(rem_id)
         await update.message.reply_text(
             f"╔══════════════════╗\n"
-            f"║   🚫 অ্যাক্সেস বাতিল   ║\n"
+            f"║   🚫 অ্যাক্সেস বাতিল    \n"
             f"╚══════════════════╝\n\n"
             f"👤 ইউজার আইডি: {rem_id}\n"
             f"🔴 স্ট্যাটাস: Access Removed ❌\n"
@@ -141,7 +141,7 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type not in ["group", "supergroup"]:
         await update.message.reply_text(
             "╔══════════════════╗\n"
-            "║  ⚠️ ভুল জায়গা!  ║\n"
+            "║  ⚠️ ভুল জায়গা!   \n"
             "╚══════════════════╝\n\n"
             "🚫 /set কমান্ড শুধু গ্রুপে কাজ করে!\n"
             "━━━━━━━━━━━━━━━━━━\n"
@@ -157,7 +157,7 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"╔══════════════════╗\n"
-        f"  🎯 গ্রুপ যোগ সম্পন্ন  ║\n"
+        f"  🎯 গ্রুপ যোগ সম্পন্ন  \n"
         f"╚══════════════════╝\n\n"
         f"✅ গ্রুপ সফলভাবে যোগ হয়েছে!\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -180,7 +180,7 @@ async def show_groups(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not target_groups:
         await update.message.reply_text(
             "╔══════════════════╗\n"
-            "║  📋 গ্রুপ লিস্ট খালি  ║\n"
+            "║  📋 গ্রুপ লিস্ট খালি   \n"
             "╚══════════════════╝\n\n"
             "⚠️ কোনো গ্রুপ সেট হয়নি!\n"
             "💡 গ্রুপে গিয়ে /set দিন।"
@@ -197,7 +197,7 @@ async def show_groups(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"╔══════════════════╗\n"
-        f"║  📋 টার্গেট গ্রুপ লিস্ট  ║\n"
+        f"║  📋 টার্গেট গ্রুপ লিস্ট   \n"
         f"╚══════════════════╝\n\n"
         f"📡 মোট গ্রুপ: {len(target_groups)} টি\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -243,7 +243,7 @@ async def setmsg(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "╔══════════════════╗\n"
-        "║  📝 মেসেজ সেট সম্পন্ন  ║\n"
+        "║  📝 মেসেজ সেট সম্পন্ন   \n"
         "╚══════════════════╝\n\n"
         "✅ বিজ্ঞাপন সফলভাবে সেভ হয়েছে!\n"
         "━━━━━━━━━━━━━━━━━━\n"
@@ -429,7 +429,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"📡 টার্গেট গ্রুপ: {len(target_groups)} টি\n"
         f"💬 মেসেজ: {msg_preview}\n"
         f"⏱ ইন্টারভাল: {str(interval // 60) + ' মিনিট' if interval else 'সেট হয়নি'}\n"
-        f"🕐 BD সময়: {now_bd.strftime('%I:%M %p')}\n"
+        f"🕐 সময়: {now_bd.strftime('%I:%M %p')}\n"
         f"━━━━━━━━━━━━━━━━━━\n"
         f"⏳ পরের মেসেজ: {countdown_text}"
     )
