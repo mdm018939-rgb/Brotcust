@@ -20,6 +20,7 @@ data = {
     "is_running": False,
     "interval": None,
     "next_broadcast_time": None,
+    "last_msg_ids": {},
 }
 
 logging.basicConfig(level=logging.INFO)
@@ -360,10 +361,22 @@ async def send_broadcast(context: ContextTypes.DEFAULT_TYPE):
 
     for group_id in list(target_groups.keys()):
         try:
+            # আগের মেসেজ ডিলিট করো
+            old_msg_id = data["last_msg_ids"].get(group_id)
+            if old_msg_id:
+                try:
+                    await context.bot.delete_message(chat_id=group_id, message_id=old_msg_id)
+                except Exception:
+                    pass
+
+            # নতুন মেসেজ পাঠাও এবং id সেভ করো
             if photo:
-                await context.bot.send_photo(chat_id=group_id, photo=photo, caption=msg)
+                sent = await context.bot.send_photo(chat_id=group_id, photo=photo, caption=msg)
             else:
-                await context.bot.send_message(chat_id=group_id, text=msg)
+                sent = await context.bot.send_message(chat_id=group_id, text=msg)
+
+            data["last_msg_ids"][group_id] = sent.message_id
+
         except Exception as e:
             logging.error(f"Group {group_id} error: {e}")
 
