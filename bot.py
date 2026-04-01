@@ -53,7 +53,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "╔═══════════════════╗\n"
-        "║  🤖 AutoBroadcast Bot  ║\n"
+        "║  🤖 AutoBroadcast Bot   \n"
         "╚═══════════════════╝\n\n"
         "✨ স্বাগতম! বট সফলভাবে চালু আছে।\n\n"
         "📋 কমান্ড লিস্ট:\n"
@@ -87,7 +87,7 @@ async def allow_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         allowed_users.add(new_id)
         await update.message.reply_text(
             f"╔══════════════════╗\n"
-            f"║   ✅ অ্যাক্সেস প্রদান   ║\n"
+            f"║   ✅ অ্যাক্সেস প্রদান    \n"
             f"╚══════════════════╝\n\n"
             f"👤 ইউজার আইডি: {new_id}\n"
             f"🟢 স্ট্যাটাস: Access Granted ✅\n"
