@@ -52,9 +52,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await update.message.reply_text(
-        "╔═══════════════════╗\n"
+        "╔══════════════════╗\n"
         "  🤖 AutoBroadcast Bot   \n"
-        "╚═══════════════════╝\n\n"
+        "╚══════════════════╝\n\n"
         "✨ স্বাগতম! বট সফলভাবে চালু আছে।\n\n"
         "📋 কমান্ড লিস্ট:\n"
         "┌───────────────────\n"
