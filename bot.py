@@ -57,7 +57,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "╚═══════════════════╝\n\n"
         "✨ স্বাগতম! বট সফলভাবে চালু আছে।\n\n"
         "📋 কমান্ড লিস্ট:\n"
-        "┌─────────────────────\n"
+        "┌───────────────────\n"
         "│ 🎯 /set — গ্রুপ টার্গেট সেট\n"
         "│ 📋 /groups — গ্রুপ লিস্ট ও বাদ দিন\n"
         "│ 📝 /setmsg — বিজ্ঞাপন সেট\n"
@@ -65,7 +65,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "│ 🛑 /stop — ব্রডকাস্ট বন্ধ\n"
         "│ 👥 /allow [id] — ইউজার অ্যাড\n"
         "│ 🚫 /remove [id] — ইউজার বাদ\n"
-        "└─────────────────────\n\n"
+        "└───────────────────\n\n"
         "⚡ Powered by AutoBroadcast"
     )
 
