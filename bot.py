@@ -156,15 +156,15 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target_groups[gid] = title
 
     await update.message.reply_text(
-        f"╔══════════════════╗\n"
+        f"╔════════════════\n"
         f"  🎯 গ্রুপ যোগ সম্পন্ন  \n"
-        f"╚══════════════════╝\n\n"
+        f"╚════════════════\n\n"
         f"✅ গ্রুপ সফলভাবে যোগ হয়েছে!\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
+        f"━━━━━━━━━━━━━━━━━\n"
         f"📛 নাম: {title}\n"
         f"🆔 আইডি: {gid}\n"
         f"📡 মোট গ্রুপ: {len(target_groups)} টি\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
+        f"━━━━━━━━━━━━━━━━━\n"
         f"💡 আরো গ্রুপে /set দিয়ে যোগ করুন।"
     )
 
