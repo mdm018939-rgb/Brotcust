@@ -53,7 +53,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "╔═══════════════════╗\n"
-        "║  🤖 AutoBroadcast Bot   \n"
+        "  🤖 AutoBroadcast Bot   \n"
         "╚═══════════════════╝\n\n"
         "✨ স্বাগতম! বট সফলভাবে চালু আছে।\n\n"
         "📋 কমান্ড লিস্ট:\n"
@@ -157,7 +157,7 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"╔══════════════════╗\n"
-        f"║  🎯 গ্রুপ যোগ সম্পন্ন  ║\n"
+        f"  🎯 গ্রুপ যোগ সম্পন্ন  ║\n"
         f"╚══════════════════╝\n\n"
         f"✅ গ্রুপ সফলভাবে যোগ হয়েছে!\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -290,7 +290,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(
             f"✅ '{title}' বাদ দেওয়া হয়েছে!\n\n"
             f"╔══════════════════╗\n"
-            f"║  📋 টার্গেট গ্রুপ লিস্ট  ║\n"
+            f"║  📋 টার্গেট গ্রুপ লিস্ট   \n"
             f"╚══════════════════╝\n\n"
             f"📡 বাকি গ্রুপ: {len(target_groups)} টি\n"
             f"━━━━━━━━━━━━━━━━━━\n"
@@ -312,7 +312,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await query.edit_message_text(
             f"╔══════════════════╗\n"
-            f"║  🚀 ব্রডকাস্ট শুরু!  ║\n"
+            f"║  🚀 ব্রডকাস্ট শুরু!   \n"
             f"╚══════════════════╝\n\n"
             f"✅ সফলভাবে চালু হয়েছে!\n"
             f"━━━━━━━━━━━━━━━━━━\n"
@@ -385,7 +385,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "╔══════════════════╗\n"
-        "║  🛑 ব্রডকাস্ট বন্ধ  ║\n"
+        "║  🛑 ব্রডকাস্ট বন্ধ   \n"
         "╚══════════════════╝\n\n"
         "✅ সফলভাবে বন্ধ করা হয়েছে!\n"
         "━━━━━━━━━━━━━━━━━━\n"
@@ -422,7 +422,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"╔══════════════════╗\n"
-        f"║  📊 বর্তমান অবস্থা  ║\n"
+        f"║  📊 বর্তমান অবস্থা  \n"
         f"╚══════════════════╝\n\n"
         f"🔄 ব্রডকাস্ট: {'✅ চালু' if data['is_running'] else '🛑 বন্ধ'}\n"
         f"━━━━━━━━━━━━━━━━━━\n"
