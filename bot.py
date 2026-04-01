@@ -33,11 +33,11 @@ async def access_denied(update: Update):
     user = update.effective_user
     await update.message.reply_text(
         f"🛡 এক্সেস ডিনাইড\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
+        f"━━━━━━━━━━━━━━━━\n"
         f"👤 আপনার তথ্য:\n"
         f"🆔 আইডি: {user.id}\n"
         f"⚠️ স্ট্যাটাস: No Access ❌\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
+        f"━━━━━━━━━━━━━━━━\n"
         f"🚫 দুঃখিত, আপনার কাছে এই বটটি\n"
         f"ব্যবহার করার অনুমতি নেই।"
     )
