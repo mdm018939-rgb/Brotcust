@@ -347,18 +347,18 @@ async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GROUP_CONTROL_ID,
             text=(
                 "🌙✨ 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 ✨🌙\n"
-                "╔══════════════════╗\n"
+                "╔═══════════════╗\n"
                 "  /*শুভ রাত্রি 😴*/  \n"
-                "╚══════════════════╝\n\n"
+                "╚═══════════════╝\n\n"
                 "🤲 ঘুমানোর আগে দোয়া:\n"
-                "━━━━━━━━━━━━━━━━━━\n"
+                "━━━━━━━━━━━━━━━━\n"
                 "🕌 اللهم بسمك أموت وأحيا\n\n"
                 "📖 বাংলা উচ্চারণ:\n"
                 "'আল্লাহুম্মা বিসমিকা আমুতু ওয়া-আহইয়া'\n\n"
                 "💫 অর্থ:\n"
                 "হে আল্লাহ! আমি তোমারই নামে মৃত্যুবরণ করি,\n"
                 "আবার তোমারই নামে জীবন ধারন করি।\n"
-                "━━━━━━━━━━━━━━━━━━\n"
+                "━━━━━━━━━━━━━━━━\n"
                 "⚠️ বিশেষ দ্রষ্টব্য:\n"
                 "এখন কোনো এডমিন লাইনে থাকবে না!!\n"
                 "তাই গ্রুপটি অফ 🔴\n"
@@ -367,18 +367,12 @@ async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
         )
         group_night_msg_id = sent.message_id
 
-        # সব পারমিশন অফ করো
+        # Text + Photos অফ করো
         await context.bot.set_chat_permissions(
             chat_id=GROUP_CONTROL_ID,
             permissions=ChatPermissions(
                 can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_polls=False,
-                can_send_other_messages=False,
-                can_add_web_page_previews=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
+                can_send_photos=False,
             )
         )
     except Exception as e:
@@ -402,18 +396,12 @@ async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
             except Exception:
                 pass
 
-        # শুধু Text + Media অন করো
+        # Text + Photos আবার অন করো
         await context.bot.set_chat_permissions(
             chat_id=GROUP_CONTROL_ID,
             permissions=ChatPermissions(
                 can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_polls=False,
-                can_send_other_messages=False,
-                can_add_web_page_previews=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
+                can_send_photos=True,
             )
         )
 
@@ -422,13 +410,13 @@ async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GROUP_CONTROL_ID,
             text=(
                 "🌅✨ 𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 ✨🌅\n"
-                "╔══════════════════╗\n"
+                "╔═══════════════╗\n"
                 "  শুভ সকাল 🌸  \n"
-                "╚══════════════════╝\n\n"
-                "━━━━━━━━━━━━━━━━━━\n"
+                "╚═══════════════╝\n\n"
+                "━━━━━━━━━━━━━━━━\n"
                 "🎉 আমাদের গ্রুপটি খোলা হয়েছে!\n"
                 "এখন আপনারা বোনাস নিতে পারবেন। 🎁\n"
-                "━━━━━━━━━━━━━━━━━━"
+                "━━━━━━━━━━━━━━━━"
             )
         )
     except Exception as e:
