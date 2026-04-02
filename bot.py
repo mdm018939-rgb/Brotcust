@@ -347,18 +347,18 @@ async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GROUP_CONTROL_ID,
             text=(
                 "🌙✨ 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 ✨🌙\n"
-                "╔════════════════╗\n"
+                "╔══════════════════╗\n"
                 "  /*শুভ রাত্রি 😴*/  \n"
-                "╚════════════════╝\n\n"
+                "╚══════════════════╝\n\n"
                 "🤲 ঘুমানোর আগে দোয়া:\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "━━━━━━━━━━━━━━━━━━\n"
                 "🕌 اللهم بسمك أموت وأحيا\n\n"
                 "📖 বাংলা উচ্চারণ:\n"
                 "'আল্লাহুম্মা বিসমিকা আমুতু ওয়া-আহইয়া'\n\n"
                 "💫 অর্থ:\n"
                 "হে আল্লাহ! আমি তোমারই নামে মৃত্যুবরণ করি,\n"
                 "আবার তোমারই নামে জীবন ধারন করি।\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "━━━━━━━━━━━━━━━━━━\n"
                 "⚠️ বিশেষ দ্রষ্টব্য:\n"
                 "এখন কোনো এডমিন লাইনে থাকবে না!!\n"
                 "তাই গ্রুপটি অফ 🔴\n"
@@ -422,13 +422,13 @@ async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
             chat_id=GROUP_CONTROL_ID,
             text=(
                 "🌅✨ 𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 ✨🌅\n"
-                "╔═══════════════╗\n"
+                "╔══════════════════╗\n"
                 "  শুভ সকাল 🌸  \n"
-                "╚═══════════════╝\n\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "╚══════════════════╝\n\n"
+                "━━━━━━━━━━━━━━━━━━\n"
                 "🎉 আমাদের গ্রুপটি খোলা হয়েছে!\n"
                 "এখন আপনারা বোনাস নিতে পারবেন। 🎁\n"
-                "━━━━━━━━━━━━━━━━"
+                "━━━━━━━━━━━━━━━━━━"
             )
         )
     except Exception as e:
@@ -568,9 +568,10 @@ def main():
 
     # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
     # রাত ১২:০০ BD = ১৮:০০ UTC
-    app.job_queue.run_daily(group_night_off, time=datetime.strptime("18:00", "%H:%M").replace(tzinfo=timezone.utc).timetz())
+    from datetime import time as dt_time
+    app.job_queue.run_daily(group_night_off, time=dt_time(18, 0, tzinfo=timezone.utc))
     # সকাল ৫:০০ BD = ২৩:০০ UTC
-    app.job_queue.run_daily(group_morning_on, time=datetime.strptime("23:00", "%H:%M").replace(tzinfo=timezone.utc).timetz())
+    app.job_queue.run_daily(group_morning_on, time=dt_time(23, 0, tzinfo=timezone.utc))
 
     print("Bot started...")
     app.run_polling()
