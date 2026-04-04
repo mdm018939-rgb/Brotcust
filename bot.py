@@ -11,6 +11,7 @@ BOT_TOKEN = "8593628816:AAGfsVV5saeuiBqNz4XDl1XzL8bygMuZBps"
 OWNER_ID = 6625019627
 GROUP_CONTROL_ID = -1002872325078  # অটো অন/অফ গ্রুপ
 group_night_msg_id = None  # রাতের মেসেজ ID সেভ
+group_warning_msg_id = None  # ওয়ার্নিং মেসেজ ID সেভ
 allowed_users = set([OWNER_ID])
 target_groups = {}  # {group_id: group_title}
 
@@ -337,6 +338,50 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ============================================
+# ওয়ার্নিং মেসেজ — রাত ১১:০০
+# ============================================
+async def group_warning(context: ContextTypes.DEFAULT_TYPE):
+    global group_warning_msg_id
+    try:
+        sent = await context.bot.send_message(
+            chat_id=GROUP_CONTROL_ID,
+            text=(
+                "⚠️✨ 𝐀𝐭𝐭𝐞𝐧𝐭𝐢𝐨𝐧 ✨⚠️\n"
+                "╔═══════════════╗\n"
+                "  🔔 বিশেষ বিজ্ঞপ্তি  \n"
+                "╚═══════════════╝\n\n"
+                "🎁 যারা যারা বোনাস নিতে চান\n"
+                "তাড়াতাড়ি নিয়ে নিন! ⏰\n\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "🔴 রাত ১২:০০ টায় গ্রুপটি\n"
+                "অফ করা হবে!\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "⏳ মাত্র ১ ঘণ্টা বাকি আছে!\n"
+                "🚀 এখনই সুযোগ নিন! 💰"
+            )
+        )
+        group_warning_msg_id = sent.message_id
+    except Exception as e:
+        logging.error(f"Warning message error: {e}")
+
+
+# ============================================
+# ওয়ার্নিং মেসেজ ডিলিট — রাত ১১:৫০
+# ============================================
+async def group_warning_delete(context: ContextTypes.DEFAULT_TYPE):
+    global group_warning_msg_id
+    try:
+        if group_warning_msg_id:
+            await context.bot.delete_message(
+                chat_id=GROUP_CONTROL_ID,
+                message_id=group_warning_msg_id
+            )
+            group_warning_msg_id = None
+    except Exception as e:
+        logging.error(f"Warning delete error: {e}")
+
+
+# ============================================
 # গ্রুপ অটো অফ — রাত ১২টা
 # ============================================
 async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
@@ -555,10 +600,14 @@ def main():
     app.add_handler(MessageHandler(filters.PHOTO & filters.CaptionRegex(r'^/setmsg'), setmsg))
 
     # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
-    # রাত ১২:০০ BD = ১৮:০০ UTC
+    # রাত ৯:১০ BD = ০৩:১০ UTC
     from datetime import time as dt_time
+    # রাত ১১:০০ BD = UTC 17:00
+    app.job_queue.run_daily(group_warning, time=dt_time(17, 0, tzinfo=timezone.utc))
+    # রাত ১১:৫০ BD = UTC 17:50
+    app.job_queue.run_daily(group_warning_delete, time=dt_time(17, 50, tzinfo=timezone.utc))
     app.job_queue.run_daily(group_night_off, time=dt_time(18, 0, tzinfo=timezone.utc))
-    # সকাল ৫:০০ BD = ২৩:০০ UTC
+    # সকাল ৯:১৫ BD = ০৩:১৫ UTC
     app.job_queue.run_daily(group_morning_on, time=dt_time(23, 0, tzinfo=timezone.utc))
 
     print("Bot started...")
