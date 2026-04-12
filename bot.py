@@ -90,12 +90,12 @@ async def allow_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         new_id = int(context.args[0])
         allowed_users.add(new_id)
         await update.message.reply_text(
-            f"╔══════════════════╗\n"
+            f"╔═════════════════╗\n"
             f"║   ✅ অ্যাক্সেস প্রদান    \n"
-            f"╚══════════════════╝\n\n"
+            f"╚═════════════════╝\n\n"
             f"👤 ইউজার আইডি: {new_id}\n"
             f"🟢 স্ট্যাটাস: Access Granted ✅\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
+            f"━━━━━━━━━━━━━━━━━\n"
             f"🎉 এই ইউজার এখন বট ব্যবহার করতে পারবে।"
         )
     except ValueError:
@@ -121,9 +121,9 @@ async def remove_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         allowed_users.discard(rem_id)
         await update.message.reply_text(
-            f"╔══════════════════╗\n"
+            f"╔═════════════════╗\n"
             f"║   🚫 অ্যাক্সেস বাতিল    \n"
-            f"╚══════════════════╝\n\n"
+            f"╚═════════════════╝\n\n"
             f"👤 ইউজার আইডি: {rem_id}\n"
             f"🔴 স্ট্যাটাস: Access Removed ❌\n"
             f"━━━━━━━━━━━━━━━━━━\n"
@@ -335,6 +335,37 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             first=seconds,
             name="broadcast_loop"
         )
+
+
+# ============================================
+# শিফট শেষের নোটিশ — রাত ৯:৩০
+# ============================================
+async def shift_end_notice(context: ContextTypes.DEFAULT_TYPE):
+    try:
+        today = datetime.now(BD_TZ).strftime("%d/%m/%Y")
+        await context.bot.send_message(
+            chat_id=GROUP_CONTROL_ID,
+            text=(
+                "🔔✨ বিশেষ বিজ্ঞপ্তি ✨🔔\n"
+                "╔══════════════╗\n"
+                "   📢 অফিশিয়াল নোটিশ 📢   \n"
+                "╚══════════════╝\n\n"
+                "🕐 আমাদের সকল সহকারীর কাজ\n"
+                "সকাল ১১টায় শুরু হয়!! ✅ এবং\n"
+                "রাত ৯:৩০ মিনিটে শেষ হয়। 🔴\n\n"
+                "😴 এখন রাত ৯:৩০ বাজে তাই\n"
+                "আমাদের সহকারী অফলাইন 🚫\n"
+                "━━━━━━━━━━━━━━━━\n"
+                "💰 তাই এখন আপনার বোনাস\n"
+                "আপনাকেই নিতে হবে 🎯\n"
+                "বা যদি কোনো দরকার বা সমস্যা\n"
+                "থাকে আগামীকাল বলবেন 😊🙏\n"
+                "━━━━━━━━━━━━━━━━\n"
+                f"📅 Date : {today}"
+            )
+        )
+    except Exception as e:
+        logging.error(f"Shift end notice error: {e}")
 
 
 # ============================================
@@ -600,6 +631,8 @@ def main():
     # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
     # রাত ৯:১০ BD = ০৩:১০ UTC
     from datetime import time as dt_time
+    # রাত ৯:৩০ BD = UTC 15:30
+    app.job_queue.run_daily(shift_end_notice, time=dt_time(15, 30, tzinfo=timezone.utc))
     # রাত ১১:০০ BD = UTC 17:00
     app.job_queue.run_daily(group_reminder, time=dt_time(17, 0, tzinfo=timezone.utc))
     # রাত ১১:৫০ BD = UTC 17:50
