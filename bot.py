@@ -467,7 +467,6 @@ async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         logging.error(f"Morning on error: {e}")
 
-
 # ============================================
 # broadcast_job
 # ============================================
