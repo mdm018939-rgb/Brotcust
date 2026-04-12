@@ -617,9 +617,9 @@ def main():
     app.job_queue.run_daily(group_reminder, time=dt_time(17, 0, tzinfo=timezone.utc))
     # রাত ১১:৫০ BD = UTC 17:50
     app.job_queue.run_daily(delete_reminder, time=dt_time(17, 50, tzinfo=timezone.utc))
-    app.job_queue.run_daily(group_night_off, time=dt_time(18, 42, tzinfo=timezone.utc))
+    app.job_queue.run_daily(group_night_off, time=dt_time(18, 0, tzinfo=timezone.utc))
     # সকাল ৯:১৫ BD = ০৩:১৫ UTC
-    app.job_queue.run_daily(group_morning_on, time=dt_time(18, 22, tzinfo=timezone.utc))
+    app.job_queue.run_daily(group_morning_on, time=dt_time(23, 0, tzinfo=timezone.utc))
 
     print("Bot started...")
     app.run_polling()
