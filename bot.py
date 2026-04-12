@@ -6,7 +6,7 @@ from telegram.ext import (
     MessageHandler, filters, ContextTypes
 )
 
-BOT_TOKEN = "8593628816:AAGfsVV5saeuiBqNz4XDl1XzL8bygMuZBps"
+BOT_TOKEN = "8796122248:AAEDysolNwMgdYEoOSZU2pwoZPHkc3ookfA"
 
 OWNER_ID = 6625019627
 GROUP_CONTROL_ID = -1002872325078  # অটো অন/অফ গ্রুপ
