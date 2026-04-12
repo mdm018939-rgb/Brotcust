@@ -35,13 +35,17 @@ def is_allowed(user_id):
 
 async def access_denied(update: Update):
     user = update.effective_user
+    keyboard = [[InlineKeyboardButton("📞 Contact Admin", url="https://t.me/mrincome9")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         f"🛡 এক্সেস ডিনাইড\n\n"
         f"👤 আপনার তথ্য:\n"
-        f"🆔 আইডি: {user.id}\n"
+        f"🆔 আইডি: `{user.id}`\n"
         f"⚠️ স্ট্যাটাস: No Access ❌\n"
         f"🚫 দুঃখিত, আপনার কাছে এই বটটি\n"
-        f"ব্যবহার করার অনুমতি নেই।"
+        f"ব্যবহার করার অনুমতি নেই।",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
     )
 
 
@@ -52,6 +56,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_allowed(update.effective_user.id):
         await access_denied(update)
         return
+
+    keyboard = [[InlineKeyboardButton("⚡ Powered By Mamun", url="https://t.me/mrincome9")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
         "  🤖 TakaRush বট এ \n\n"
@@ -65,8 +72,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "│ 🛑 /stop — ব্রডকাস্ট বন্ধ\n"
         "│ 👥 /allow [id] — ইউজার অ্যাড\n"
         "│ 🚫 /remove [id] — ইউজার বাদ\n"
-        "└───────────────────\n\n"
-        "⚡ Powered by @mrincome9"
+        "└───────────────────",
+        reply_markup=reply_markup
     )
 
 
