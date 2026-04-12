@@ -36,12 +36,10 @@ def is_allowed(user_id):
 async def access_denied(update: Update):
     user = update.effective_user
     await update.message.reply_text(
-        f"🛡 এক্সেস ডিনাইড\n"
-        f"━━━━━━━━━━━━━━━━\n"
+        f"🛡 এক্সেস ডিনাইড\n\n"
         f"👤 আপনার তথ্য:\n"
         f"🆔 আইডি: {user.id}\n"
         f"⚠️ স্ট্যাটাস: No Access ❌\n"
-        f"━━━━━━━━━━━━━━━━\n"
         f"🚫 দুঃখিত, আপনার কাছে এই বটটি\n"
         f"ব্যবহার করার অনুমতি নেই।"
     )
@@ -56,10 +54,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await update.message.reply_text(
-        "╔══════════════════╗\n"
-        "  🤖 AutoBroadcast Bot   \n"
-        "╚══════════════════╝\n\n"
-        "✨ স্বাগতম! বট সফলভাবে চালু আছে।\n\n"
+        "  🤖 TakaRush বট এ \n\n"
+        "✨ স্বাগতম! \n\n"
         "📋 কমান্ড লিস্ট:\n"
         "┌───────────────────\n"
         "│ 🎯 /set — গ্রুপ টার্গেট সেট\n"
@@ -90,12 +86,9 @@ async def allow_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         new_id = int(context.args[0])
         allowed_users.add(new_id)
         await update.message.reply_text(
-            f"╔═════════════════╗\n"
-            f"║   ✅ অ্যাক্সেস প্রদান    \n"
-            f"╚═════════════════╝\n\n"
+            f"   ✅ অ্যাক্সেস প্রদান    \n\n"
             f"👤 ইউজার আইডি: {new_id}\n"
             f"🟢 স্ট্যাটাস: Access Granted ✅\n"
-            f"━━━━━━━━━━━━━━━━━\n"
             f"🎉 এই ইউজার এখন বট ব্যবহার করতে পারবে।"
         )
     except ValueError:
@@ -121,12 +114,9 @@ async def remove_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         allowed_users.discard(rem_id)
         await update.message.reply_text(
-            f"╔═════════════════╗\n"
-            f"║   🚫 অ্যাক্সেস বাতিল    \n"
-            f"╚═════════════════╝\n\n"
+            f"   🚫 অ্যাক্সেস বাতিল    \n\n"
             f"👤 ইউজার আইডি: {rem_id}\n"
             f"🔴 স্ট্যাটাস: Access Removed ❌\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
             f"🚫 এই ইউজার আর বট ব্যবহার করতে পারবে না।"
         )
     except ValueError:
@@ -144,11 +134,8 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # শুধু গ্রুপে কাজ করবে
     if update.effective_chat.type not in ["group", "supergroup"]:
         await update.message.reply_text(
-            "╔══════════════════╗\n"
-            "║  ⚠️ ভুল জায়গা!   \n"
-            "╚══════════════════╝\n\n"
-            "🚫 /set কমান্ড শুধু গ্রুপে কাজ করে!\n"
-            "━━━━━━━━━━━━━━━━━━\n"
+            "  ⚠️ ভুল জায়গা!   \n\n"
+            "🚫 /set কমান্ড শুধু গ্রুপে কাজ করে!\n\n"
             "📌 যেভাবে করবেন:\n"
             "1. বটকে গ্রুপে Admin করুন\n"
             "2. সেই গ্রুপে গিয়ে /set দিন"
@@ -160,16 +147,10 @@ async def set_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target_groups[gid] = title
 
     await update.message.reply_text(
-        f"╔════════════════\n"
-        f"  🎯 গ্রুপ যোগ সম্পন্ন  \n"
-        f"╚════════════════\n\n"
-        f"✅ গ্রুপ সফলভাবে যোগ হয়েছে!\n"
-        f"━━━━━━━━━━━━━━━━━\n"
+        f"✅ গ্রুপ সফলভাবে যোগ হয়েছে!\n\n"
         f"📛 নাম: {title}\n"
         f"🆔 আইডি: {gid}\n"
         f"📡 মোট গ্রুপ: {len(target_groups)} টি\n"
-        f"━━━━━━━━━━━━━━━━━\n"
-        f"💡 আরো গ্রুপে /set দিয়ে যোগ করুন।"
     )
 
 
@@ -183,9 +164,7 @@ async def show_groups(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not target_groups:
         await update.message.reply_text(
-            "╔══════════════════╗\n"
-            "║  📋 গ্রুপ লিস্ট খালি   \n"
-            "╚══════════════════╝\n\n"
+            "  📋 গ্রুপ লিস্ট খালি   \n"
             "⚠️ কোনো গ্রুপ সেট হয়নি!\n"
             "💡 গ্রুপে গিয়ে /set দিন।"
         )
@@ -200,13 +179,9 @@ async def show_groups(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ])
 
     await update.message.reply_text(
-        f"╔══════════════════╗\n"
-        f"║  📋 টার্গেট গ্রুপ লিস্ট   \n"
-        f"╚══════════════════╝\n\n"
+        f"  📋 টার্গেট গ্রুপ লিস্ট   \n"
         f"📡 মোট গ্রুপ: {len(target_groups)} টি\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
         f"{group_lines}"
-        f"━━━━━━━━━━━━━━━━━━\n"
         f"❌ বাদ দিতে নিচের বাটন চাপুন:",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
@@ -246,11 +221,7 @@ async def setmsg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     await update.message.reply_text(
-        "╔══════════════════╗\n"
-        "║  📝 মেসেজ সেট সম্পন্ন   \n"
-        "╚══════════════════╝\n\n"
-        "✅ বিজ্ঞাপন সফলভাবে সেভ হয়েছে!\n"
-        "━━━━━━━━━━━━━━━━━━\n"
+        "✅ বিজ্ঞাপন সফলভাবে সেট হয়েছে!\n"
         "⏱ ব্রডকাস্ট ইন্টারভাল সিলেক্ট করুন:",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
@@ -293,11 +264,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await query.edit_message_text(
             f"✅ '{title}' বাদ দেওয়া হয়েছে!\n\n"
-            f"╔══════════════════╗\n"
-            f"║  📋 টার্গেট গ্রুপ লিস্ট   \n"
-            f"╚══════════════════╝\n\n"
+            f"  📋 টার্গেট গ্রুপ লিস্ট   \n"
             f"📡 বাকি গ্রুপ: {len(target_groups)} টি\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
             f"❌ বাদ দিতে পাশের বাটন চাপুন:",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
@@ -315,14 +283,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             job.schedule_removal()
 
         await query.edit_message_text(
-            f"╔══════════════════╗\n"
-            f"║  🚀 ব্রডকাস্ট শুরু!   \n"
-            f"╚══════════════════╝\n\n"
-            f"✅ সফলভাবে চালু হয়েছে!\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
+            f"🚀 ব্রডকাস্ট চালু হয়েছে!\n\n"
             f"⏱ ইন্টারভাল: প্রতি {minutes} মিনিটে\n"
             f"📡 গ্রুপ সংখ্যা: {len(target_groups)} টি\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
             f"⛔ বন্ধ করতে /stop দিন।"
         )
 
@@ -338,6 +301,25 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ============================================
+# শিফট শুরুর নোটিশ — সকাল ১১:০০
+# ============================================
+async def shift_start_notice(context: ContextTypes.DEFAULT_TYPE):
+    try:
+        today = datetime.now(BD_TZ).strftime("%d/%m/%Y")
+        await context.bot.send_message(
+            chat_id=GROUP_CONTROL_ID,
+            text=(
+                "🔔 এখন সকাল ১১ টা বাজে!\n\n"
+                "✅ এখন আপনারা কাজ শুরু\n"
+                "করতে পারেন! 💪🎯\n"
+                f"📅 Date : {today}"
+            )
+        )
+    except Exception as e:
+        logging.error(f"Shift start notice error: {e}")
+
+
+# ============================================
 # শিফট শেষের নোটিশ — রাত ৯:৩০
 # ============================================
 async def shift_end_notice(context: ContextTypes.DEFAULT_TYPE):
@@ -346,21 +328,17 @@ async def shift_end_notice(context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(
             chat_id=GROUP_CONTROL_ID,
             text=(
-                "🔔✨ বিশেষ বিজ্ঞপ্তি ✨🔔\n"
-                "╔══════════════╗\n"
+                "🔔✨ বিশেষ বিজ্ঞপ্তি ✨🔔\n\n"
                 "   📢 অফিশিয়াল নোটিশ 📢   \n"
-                "╚══════════════╝\n\n"
                 "🕐 আমাদের সকল সহকারীর কাজ\n"
                 "সকাল ১১টায় শুরু হয়!! ✅ এবং\n"
                 "রাত ৯:৩০ মিনিটে শেষ হয়। 🔴\n\n"
                 "😴 এখন রাত ৯:৩০ বাজে তাই\n"
-                "আমাদের সহকারী অফলাইন 🚫\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "আমাদের সহকারী অফলাইন 🚫\n\n"
                 "💰 তাই এখন আপনার বোনাস\n"
                 "আপনাকেই নিতে হবে 🎯\n"
                 "বা যদি কোনো দরকার বা সমস্যা\n"
-                "থাকে আগামীকাল বলবেন 😊🙏\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "থাকে আগামীকাল বলবেন 😊\n"
                 f"📅 Date : {today}"
             )
         )
@@ -377,18 +355,14 @@ async def group_reminder(context: ContextTypes.DEFAULT_TYPE):
         sent = await context.bot.send_message(
             chat_id=GROUP_CONTROL_ID,
             text=(
-                "🔔⚠️ বিশেষ নোটিশ ⚠️🔔\n"
-                "╔══════════════╗\n"
+                "🔔⚠️ বিশেষ নোটিশ ⚠️🔔\n\n"
                 "  🎁 বোনাস ক্লেম রিমাইন্ডার 🎁  \n"
-                "╚══════════════╝\n\n"
                 "⏰ এখন রাত ১১:০০ টা বাজে!\n\n"
                 "🚨 মাত্র ১ ঘণ্টা বাকি আছে!\n"
-                "━━━━━━━━━━━━━━━━\n"
                 "💰 যার যার বোনাস এখনই\n"
                 "তাড়াতাড়ি ক্লেম করে নিন! 🎯\n\n"
                 "⚠️ রাত ১২:০০ টায় গ্রুপটি\n"
                 "🔴 অফ হয়ে যাবে!\n"
-                "━━━━━━━━━━━━━━━━\n"
                 "⚡ দেরি না করে এখনই নিন! ⚡\n"
                 "🕛 সময় শেষ হওয়ার আগেই! 🕛"
             )
@@ -420,19 +394,14 @@ async def group_night_off(context: ContextTypes.DEFAULT_TYPE):
         sent = await context.bot.send_message(
             chat_id=GROUP_CONTROL_ID,
             text=(
-                "🌙✨ 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 ✨🌙\n"
-                "╔═══════════════╗\n"
-                "  /*শুভ রাত্রি 😴*/  \n"
-                "╚═══════════════╝\n\n"
+                "🌙✨ 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 ✨🌙\n\n"
                 "🤲 ঘুমানোর আগে দোয়া:\n"
-                "━━━━━━━━━━━━━━━━\n"
                 "🕌 اللهم بسمك أموت وأحيا\n\n"
                 "📖 বাংলা উচ্চারণ:\n"
                 "'আল্লাহুম্মা বিসমিকা আমুতু ওয়া-আহইয়া'\n\n"
                 "💫 অর্থ:\n"
                 "হে আল্লাহ! আমি তোমারই নামে মৃত্যুবরণ করি,\n"
-                "আবার তোমারই নামে জীবন ধারন করি।\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "আবার তোমারই নামে জীবন ধারন করি।\n\n"
                 "⚠️ বিশেষ দ্রষ্টব্য:\n"
                 "এখন কোনো এডমিন লাইনে থাকবে না!!\n"
                 "তাই গ্রুপটি অফ 🔴\n"
@@ -483,14 +452,9 @@ async def group_morning_on(context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(
             chat_id=GROUP_CONTROL_ID,
             text=(
-                "🌅✨ 𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 ✨🌅\n"
-                "╔═══════════════╗\n"
-                "  শুভ সকাল 🌸  \n"
-                "╚═══════════════╝\n\n"
-                "━━━━━━━━━━━━━━━━\n"
+                "🌅✨ 𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 ✨🌅\n\n"
                 "🎉 আমাদের গ্রুপটি খোলা হয়েছে!\n"
                 "এখন আপনারা বোনাস নিতে পারবেন। 🎁\n"
-                "━━━━━━━━━━━━━━━━"
             )
         )
     except Exception as e:
@@ -560,12 +524,8 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
         job.schedule_removal()
 
     await update.message.reply_text(
-        "╔══════════════════╗\n"
-        "║  🛑 ব্রডকাস্ট বন্ধ   \n"
-        "╚══════════════════╝\n\n"
+        "  🛑 ব্রডকাস্ট বন্ধ   \n\n"
         "✅ সফলভাবে বন্ধ করা হয়েছে!\n"
-        "━━━━━━━━━━━━━━━━━━\n"
-        "💤 বট এখন নিষ্ক্রিয় আছে।\n"
         "▶️ আবার শুরু করতে /setmsg দিন।"
     )
 
@@ -597,18 +557,28 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg_preview = msg_preview[:25] + "..."
 
     await update.message.reply_text(
-        f"╔══════════════════╗\n"
-        f"║  📊 বর্তমান অবস্থা  \n"
-        f"╚══════════════════╝\n\n"
+        f"  📊 বর্তমান অবস্থা  \n\n"
         f"🔄 ব্রডকাস্ট: {'✅ চালু' if data['is_running'] else '🛑 বন্ধ'}\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
         f"📡 টার্গেট গ্রুপ: {len(target_groups)} টি\n"
         f"💬 মেসেজ: {msg_preview}\n"
         f"⏱ ইন্টারভাল: {str(interval // 60) + ' মিনিট' if interval else 'সেট হয়নি'}\n"
         f"🕐 সময়: {now_bd.strftime('%I:%M %p')}\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
         f"⏳ পরের মেসেজ: {countdown_text}"
     )
+
+
+# ============================================
+# গ্রুপে "time" লিখলে সময় ও তারিখ দেখাবে
+# ============================================
+async def time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    if text and text.strip().lower() == "time":
+        now_bd = datetime.now(BD_TZ)
+        await update.message.reply_text(
+            f"🕰️ এখন সময়\n\n"
+            f"🕐 Time: {now_bd.strftime('%I:%M %p')}\n"
+            f"📅 Date: {now_bd.strftime('%d/%m/%Y')}"
+        )
 
 
 # ============================================
@@ -627,10 +597,13 @@ def main():
     app.add_handler(CommandHandler("remove", remove_user))
     app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.PHOTO & filters.CaptionRegex(r'^/setmsg'), setmsg))
+    app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r'(?i)^time$'), time_handler))
 
     # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
     # রাত ৯:১০ BD = ০৩:১০ UTC
     from datetime import time as dt_time
+    # সকাল ১১:০০ BD = UTC 05:00
+    app.job_queue.run_daily(shift_start_notice, time=dt_time(5, 0, tzinfo=timezone.utc))
     # রাত ৯:৩০ BD = UTC 15:30
     app.job_queue.run_daily(shift_end_notice, time=dt_time(15, 30, tzinfo=timezone.utc))
     # রাত ১১:০০ BD = UTC 17:00
