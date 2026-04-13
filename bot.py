@@ -607,7 +607,7 @@ async def refer_code_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
             f"💬✨ আপনি নিজের WA Task বোনাস\n"
             f"নিজে নেওয়ার জন্য আপনার এই 👇\n\n"
             f"`{text}#4`\n\n"
-            f"⬆️ কোড টি এখানে এভাবে পেস্ট করুন 📋\n\n"
+            f"⬆️ কোড টি এখানে এভাবে পেস্ট করুন!\n\n"
             f"আর SMS টাস্ক এর জন্য 👇\n\n"
             f"`{text}#1`\n\n"
             f"⬆️ এভাবে পেস্ট করুন 📲✅",
