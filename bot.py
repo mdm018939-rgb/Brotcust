@@ -588,6 +588,42 @@ async def time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ============================================
+# রেফার কোড ডিটেক্ট — অটো রিপ্লাই + ৫ মিনিট পর ডিলিট
+# ============================================
+import re as _re
+
+async def refer_code_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    if not text:
+        return
+    text = text.strip()
+    if (
+        len(text) >= 6
+        and _re.fullmatch(r'[A-Za-z0-9]+', text)
+        and any(c.isupper() for c in text)
+        and any(c.islower() for c in text)
+    ):
+        reply = await update.message.reply_text(
+            f"💬✨ আপনি নিজের WA Task বোনাস\n"
+            f"নিজে নেওয়ার জন্য আপনার এই 👇\n\n"
+            f"`{text}#4`\n\n"
+            f"⬆️ কোড টি এখানে এভাবে পেস্ট করুন 📋\n\n"
+            f"আর SMS টাস্ক এর জন্য 👇\n\n"
+            f"`{text}#1`\n\n"
+            f"⬆️ এভাবে পেস্ট করুন 📲✅",
+            parse_mode="Markdown"
+        )
+        chat_id = reply.chat_id
+        message_id = reply.message_id
+        async def delete_reply(ctx):
+            try:
+                await ctx.bot.delete_message(chat_id=chat_id, message_id=message_id)
+            except Exception:
+                pass
+        context.job_queue.run_once(delete_reply, when=300)
+
+
+# ============================================
 # MAIN
 # ============================================
 def main():
@@ -604,6 +640,7 @@ def main():
     app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.PHOTO & filters.CaptionRegex(r'^/setmsg'), setmsg))
     app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r'(?i)^time$'), time_handler))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, refer_code_handler))
 
     # অটো গ্রুপ অন/অফ শিডিউল (BD Time = UTC+6)
     # রাত ৯:১০ BD = ০৩:১০ UTC
