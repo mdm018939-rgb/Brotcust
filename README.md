@@ -1,2 +1,0 @@
-# Brotcust
-Telegram Brotcust bot
