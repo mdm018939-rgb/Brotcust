@@ -10,8 +10,7 @@ from telegram.ext import (
     MessageHandler, filters, ContextTypes, ChatMemberHandler
 )
 
-BOT_TOKEN = "8796122248:AAFDQ12EQ-w9xh0ydutSUej7ke_JC5EqqxA"
-
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 OWNER_ID = 6625019627
 
 # ============================================================
