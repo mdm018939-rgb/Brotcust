@@ -191,6 +191,9 @@ TEXTS = {
         "btn_morning_10": "সকাল ১০টা",
         "btn_morning_11": "সকাল ১১টা",
         "btn_custom": "⚙️ Custom",
+        "btn_main_menu": "🏠 মেইন মেনু",
+        "custom_intv_prompt": "⏱ ইন্টারভাল লিখে পাঠান\n\nউদাহরণ:\n1h  •  2 h  •  16m  •  30 m\n১ থেকে ১২ = ঘন্টা  •  ১৫ বা বেশি = মিনিট\n\n⚠️ সর্বনিম্ন ১৫ মিনিট  •  সর্বোচ্চ ৩ দিন",
+        "custom_intv_bad": "❌ ইন্টারভালের ফরম্যাট ঠিক নেই।\n\nআবার চেষ্টা করুন।",
         "custom_off_prompt": "⚙️ বন্ধের সময় লিখে পাঠান\n\nউদাহরণ:\n10pm  •  5 am  •  11:30am\n8 1  •  10:4  •  22:15",
         "custom_on_prompt": "🌙 বন্ধ: {off}\n\n⚙️ এবার চালুর সময় লিখে পাঠান\n\nউদাহরণ:\n6am  •  7:30 am  •  14:00\n8 1  •  10:4",
         "custom_bad_format": "❌ সময়ের ফরম্যাট ঠিক নেই।\n\nআবার নতুন করে শুরু করতে /start দিয়ে ⏰ অটো শিডিউল চাপুন।",
@@ -368,6 +371,9 @@ TEXTS = {
         "btn_morning_10": "10 AM",
         "btn_morning_11": "11 AM",
         "btn_custom": "⚙️ Custom",
+        "btn_main_menu": "🏠 Main Menu",
+        "custom_intv_prompt": "⏱ Send the interval\n\nExamples:\n1h  •  2 h  •  16m  •  30 m\n1 to 12 = hours  •  15 or more = minutes\n\n⚠️ Minimum 15 minutes  •  Maximum 3 days",
+        "custom_intv_bad": "❌ Invalid interval format.\n\nPlease try again.",
         "custom_off_prompt": "⚙️ Send the auto-stop time\n\nExamples:\n10pm  •  5 am  •  11:30am\n8 1  •  10:4  •  22:15",
         "custom_on_prompt": "🌙 Off: {off}\n\n⚙️ Now send the auto-start time\n\nExamples:\n6am  •  7:30 am  •  14:00\n8 1  •  10:4",
         "custom_bad_format": "❌ Invalid time format.\n\nSend /start and tap ⏰ Auto Schedule to start again.",
@@ -968,6 +974,7 @@ async def _flush_media_group_all(context: ContextTypes.DEFAULT_TYPE):
 
 def _interval_keyboard(user_id, group_id):
     return [
+        _custom_interval_row(user_id, group_id),
         [
             InlineKeyboardButton(get_text(user_id, "btn_15min"), callback_data=f"intv_{user_id}_{group_id}_15"),
             InlineKeyboardButton(get_text(user_id, "btn_30min"), callback_data=f"intv_{user_id}_{group_id}_30"),
@@ -976,8 +983,83 @@ def _interval_keyboard(user_id, group_id):
             InlineKeyboardButton(get_text(user_id, "btn_45min"), callback_data=f"intv_{user_id}_{group_id}_45"),
             InlineKeyboardButton(get_text(user_id, "btn_60min"), callback_data=f"intv_{user_id}_{group_id}_60"),
         ],
+        _back_row(user_id),
     ]
-    
+  
+# ============================================================
+# ⚙️ Custom Interval
+# ============================================================
+from types import SimpleNamespace as _NS
+
+user_waiting_interval = {}   # {user_id: {"gid": group_id বা "all", "ts": সময়}}
+CUSTOM_MIN_MINUTES = 15
+CUSTOM_MAX_MINUTES = 3 * 24 * 60   # সর্বোচ্চ ৩ দিন
+
+
+def parse_custom_interval(text):
+    """মিনিট রিটার্ন করে। ভুল হলে None।
+    1-12 (শুধু সংখ্যা) = ঘন্টা | 15+ (শুধু সংখ্যা) = মিনিট
+    1h / 1 h = ঘন্টা | 16m / 16 m = মিনিট"""
+    t = (text or "").strip().lower().translate(BN_DIGITS_REV)
+    m = re.match(r"^(\d+)\s*(h|hr|hrs|hour|hours|m|min|mins|minute|minutes)?$", t)
+    if not m:
+        return None
+    n = int(m.group(1))
+    unit = m.group(2)
+    if unit is None:
+        minutes = n * 60 if 1 <= n <= 12 else n
+    elif unit.startswith("h"):
+        minutes = n * 60
+    else:
+        minutes = n
+    if minutes < CUSTOM_MIN_MINUTES or minutes > CUSTOM_MAX_MINUTES:
+        return None
+    return minutes
+
+
+def _custom_interval_row(user_id, group_id):
+    cb = f"intvc_all_{user_id}" if group_id == "all" else f"intvc_{user_id}_{group_id}"
+    return [InlineKeyboardButton(get_text(user_id, "btn_custom"), callback_data=cb)]
+
+
+def _back_row(user_id):
+    return [InlineKeyboardButton(get_text(user_id, "btn_back"), callback_data=f"start_back_{user_id}")]
+
+
+class _MsgQuery:
+    """টেক্সট মেসেজকে callback query এর মতো চালায়, যাতে আগের intv_ লজিকই ব্যবহার হয়"""
+    def __init__(self, message, user, data):
+        self.message = message
+        self.from_user = user
+        self.data = data
+
+    async def answer(self, *args, **kwargs):
+        return None
+
+    async def edit_message_text(self, text, reply_markup=None, **kwargs):
+        return await self.message.reply_text(text, reply_markup=reply_markup, **kwargs)
+
+
+async def custom_interval_receive(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    state = user_waiting_interval.get(user_id)
+    if not state:
+        return
+    minutes = parse_custom_interval(update.message.text)
+    if minutes is None:
+        user_waiting_interval.pop(user_id, None)   # ভুল হলে সেশন বন্ধ
+        kb = [[InlineKeyboardButton(get_text(user_id, "btn_main_menu"), callback_data=f"start_back_{user_id}")]]
+        await update.message.reply_text(
+            get_text(user_id, "custom_intv_bad"),
+            reply_markup=InlineKeyboardMarkup(kb)
+        )
+        return
+    user_waiting_interval.pop(user_id, None)
+    gid = state["gid"]
+    data = f"intv_all_{user_id}_{minutes}" if gid == "all" else f"intv_{user_id}_{gid}_{minutes}"
+    fake_update = _NS(callback_query=_MsgQuery(update.message, update.effective_user, data))
+    await button_callback(fake_update, context) 
+      
 async def schedule_time_receive(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     state = user_waiting_schedule.get(user_id)
@@ -1026,6 +1108,14 @@ async def schedule_time_receive(update: Update, context: ContextTypes.DEFAULT_TY
 async def setmsg_receive(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     msg = update.message
+
+	_iv = user_waiting_interval.get(user_id)
+    if _iv:
+        if datetime.now().timestamp() - _iv.get("ts", 0) > 300:
+            user_waiting_interval.pop(user_id, None)
+        elif msg and msg.text:
+            await custom_interval_receive(update, context)
+            return
 
     _st = user_waiting_schedule.get(user_id)
     if _st:
@@ -1112,6 +1202,7 @@ async def setmsg_receive(update: Update, context: ContextTypes.DEFAULT_TYPE):
         actual_count = len([gid for gid in my_groups if gid not in group_lock or group_lock[gid] == user_id])
         type_emoji = "📸" if msg.photo else "🎥" if msg.video else "📝"
         keyboard = [
+            _custom_interval_row(user_id, "all"),
             [
                 InlineKeyboardButton(get_text(user_id, "btn_15min"), callback_data=f"intv_all_{user_id}_15"),
                 InlineKeyboardButton(get_text(user_id, "btn_30min"), callback_data=f"intv_all_{user_id}_30"),
@@ -1120,6 +1211,7 @@ async def setmsg_receive(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 InlineKeyboardButton(get_text(user_id, "btn_45min"), callback_data=f"intv_all_{user_id}_45"),
                 InlineKeyboardButton(get_text(user_id, "btn_60min"), callback_data=f"intv_all_{user_id}_60"),
             ],
+            _back_row(user_id),
         ]
         await msg.reply_text(
             get_text(user_id, "ad_set_all").format(emoji=type_emoji, count=actual_count),
@@ -1451,6 +1543,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     cb = query.data
     if not (cb.startswith("offgp_coff_") or cb.startswith("offgp_con_")):
         user_waiting_schedule.pop(query.from_user.id, None)
+    if not cb.startswith("intvc_"):
+        user_waiting_interval.pop(query.from_user.id, None)    
 
     # ─── NEW - Broadcast Request callbacks ───
     if cb.startswith("bcast_req_"):
@@ -1843,6 +1937,29 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
+ 
+        # ─── intvc — Custom interval ───
+    if cb.startswith("intvc_"):
+        rest = cb[len("intvc_"):]
+        if rest.startswith("all_"):
+            owner_id = int(rest[len("all_"):])
+            target = "all"
+        else:
+            first_us = rest.index("_")
+            owner_id = int(rest[:first_us])
+            target = int(rest[first_us + 1:])
+
+        if user_id != owner_id:
+            await query.answer(get_text(query.from_user.id, "not_yours"), show_alert=True)
+            return
+
+        user_waiting_interval[owner_id] = {"gid": target, "ts": datetime.now().timestamp()}
+        keyboard = [[InlineKeyboardButton(get_text(owner_id, "btn_back"), callback_data=f"start_back_{owner_id}")]]
+        await query.edit_message_text(
+            get_text(owner_id, "custom_intv_prompt"),
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        return       
 
     # ─── intv_all — All Group interval ───
     if cb.startswith("intv_all_"):
